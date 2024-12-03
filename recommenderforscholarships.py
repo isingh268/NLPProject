@@ -38,8 +38,8 @@ if nav_option == "🏠 Home":
     # Quick Links Section
     st.markdown("### 🔗 Quick Links")
     st.markdown("""
-    - [SCU Financial Aid Office](https://www.scu.edu/financial-aid/)
-    - [Scholarship Application Tips](https://www.scholarships.com/resources/tips-for-applying/)
+    - [SCU Financial Aid Office](https://www.scu.edu/financialaid/)
+    - [Scholarship Application Tips](https://www.scu.edu/globalengagement/study-abroad/get-started/affording-study-abroad/apply-to-scholarships/#:~:text=Scholarships%20can%20be%20local%2C%20regional,application%20as%20a%20starting%20place.)
     - [SCU Career Center](https://www.scu.edu/careercenter/)
     """)
 
