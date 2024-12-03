@@ -11,13 +11,12 @@ st.set_page_config(
 )
 
 # Sidebar navigation
-st.sidebar.title("Navigation")
-nav_option = st.sidebar.radio("Go to:", ["Home", "Find Scholarships", "Statistics", "About"])
+st.sidebar.title("📚 Navigation")
+nav_option = st.sidebar.radio("Go to:", ["🏠 Home", "🎓 Find Scholarships", "📊 Statistics", "ℹ️ About"])
 
 # Home Page
-if nav_option == "Home":
+if nav_option == "🏠 Home":
     st.title("🎓 Welcome to SCU Scholarship Finder!")
-    st.image("scu_logo.jpg", use_column_width=True)  # Add your SCU logo path here
     st.markdown("""
     **Easily find scholarships tailored for Santa Clara University students.**
 
@@ -26,11 +25,11 @@ if nav_option == "Home":
     st.balloons()
 
 # Scholarship Finder Page
-elif nav_option == "Find Scholarships":
-    st.header("📚 Find Scholarships")
+elif nav_option == "🎓 Find Scholarships":
+    st.header("🎓 Find Scholarships")
 
     # SCU Student Information
-    st.subheader("SCU Student Information")
+    st.subheader("📚 SCU Student Information")
     scu_id = st.text_input("Enter your SCU Student ID:")
     scu_email = st.text_input("Enter your SCU Email Address:")
     major = st.selectbox("Select your academic major:", [
@@ -71,7 +70,7 @@ elif nav_option == "Find Scholarships":
     )
 
     # Submit and Display Results
-    if st.button("Find Scholarships"):
+    if st.button("🔍 Find Scholarships"):
         st.success("Scholarships matching your preferences will be displayed here!")
         # Placeholder for scholarship results
         st.markdown("""
@@ -82,7 +81,7 @@ elif nav_option == "Find Scholarships":
         """)
 
 # Statistics Page
-elif nav_option == "Statistics":
+elif nav_option == "📊 Statistics":
     st.header("📊 Scholarship Statistics")
     st.markdown("Explore trends and insights related to SCU scholarships.")
 
@@ -95,8 +94,8 @@ elif nav_option == "Statistics":
     """)
 
 # About Page
-elif nav_option == "About":
-    st.header("📖 About This App")
+elif nav_option == "ℹ️ About":
+    st.header("ℹ️ About This App")
     st.markdown("""
     **SCU Scholarship Finder** is designed to assist Santa Clara University students in finding and applying for scholarships.
 
@@ -107,5 +106,4 @@ elif nav_option == "About":
 
     Built with ❤️ for SCU students.
     """)
-    st.image("about_image.jpg", use_column_width=True)  # Add relevant image path
     st.markdown("[Visit SCU Financial Aid Office](https://www.scu.edu/financial-aid/)")
