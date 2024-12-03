@@ -3,6 +3,7 @@
 
 import streamlit as st
 from datetime import datetime
+from streamlit_calendar import calendar
 
 # Configure the page
 st.set_page_config(
@@ -122,17 +123,26 @@ elif nav_option == "🎓 Find Scholarships":
         """)
 
 # Statistics Page
-elif nav_option == "📊 Statistics":
-    st.header("📊 Scholarship Statistics")
-    st.markdown("Explore trends and insights related to SCU scholarships.")
+elif nav_option == "📅 Scholarship Calendar":
+    st.header("📅 Scholarship Deadlines Calendar")
 
-    # Placeholder for simple text-based statistics
-    st.markdown("""
-    - **Merit-Based Scholarships**: 30% of total scholarships.
-    - **Need-Based Scholarships**: 20%.
-    - **Diversity Scholarships**: 15%.
-    - **Graduate Aid**: 10%.
-    """)
+    # Manual scholarship deadlines for now
+    scholarships = {
+        "SCU Merit Scholarship": date(2024, 12, 15),
+        "Diversity in Tech Award": date(2024, 12, 20),
+        "Graduate Assistantship Grant": date(2025, 1, 10),
+    }
+
+    # Display scholarships on a calendar
+    st.markdown("### 🗓️ Upcoming Deadlines")
+    events = {name: deadline for name, deadline in scholarships.items()}
+
+    calendar(events=events)
+
+    # Display a detailed list of deadlines
+    st.markdown("### 📜 Scholarship Deadlines")
+    for name, deadline in scholarships.items():
+        st.markdown(f"- **{name}**: {deadline.strftime('%B %d, %Y')}")
 
 # About Page
 elif nav_option == "ℹ️ About":
