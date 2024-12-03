@@ -67,7 +67,7 @@ if nav_option == "🏠 Home":
     - **Do I need to file FAFSA?**  
       Filing FAFSA is required for need-based scholarships and federal aid.
     - **Where can I get help with my application?**  
-      Visit the [SCU Financial Aid Office](https://www.scu.edu/financial-aid/) or contact your academic advisor.
+      Visit the [SCU Financial Aid Office](https://www.scu.edu/financialaid/) or contact your academic advisor.
     """)
 
     st.balloons()
