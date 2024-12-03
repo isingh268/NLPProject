@@ -20,14 +20,7 @@ if nav_option == "🏠 Home":
     st.title("🎓 Welcome to SCU Scholarship Finder!")
     
     # Personalized greeting based on time of day
-    current_hour = datetime.now().hour
-    if current_hour < 12:
-        greeting = "Good Morning!"
-    elif current_hour < 18:
-        greeting = "Good Afternoon!"
-    else:
-        greeting = "Good Evening!"
-    st.subheader(f"{greeting} 👋")
+    st.subheader("Hello!👋")
 
     # Introductory Text
     st.markdown("""
