@@ -14,7 +14,7 @@ st.set_page_config(
 
 # Sidebar navigation
 st.sidebar.title("📚 Navigation")
-nav_option = st.sidebar.radio("Go to:", ["🏠 Home", "🎓 Find Scholarships", "📊 Statistics", "ℹ️ About"])
+nav_option = st.sidebar.radio("Go to:", ["🏠 Home", "🎓 Find Scholarships", "📅 Scholarship Calendar", "ℹ️ About"])
 
 # Home Page
 if nav_option == "🏠 Home":
