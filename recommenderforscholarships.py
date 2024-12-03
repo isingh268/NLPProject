@@ -2,6 +2,7 @@
 """SCU Scholarship Finder"""
 
 import streamlit as st
+from datetime import datetime
 
 # Configure the page
 st.set_page_config(
@@ -17,11 +18,58 @@ nav_option = st.sidebar.radio("Go to:", ["🏠 Home", "🎓 Find Scholarships", 
 # Home Page
 if nav_option == "🏠 Home":
     st.title("🎓 Welcome to SCU Scholarship Finder!")
-    st.markdown("""
-    **Easily find scholarships tailored for Santa Clara University students.**
+    
+    # Personalized greeting based on time of day
+    current_hour = datetime.now().hour
+    if current_hour < 12:
+        greeting = "Good Morning!"
+    elif current_hour < 18:
+        greeting = "Good Afternoon!"
+    else:
+        greeting = "Good Evening!"
+    st.subheader(f"{greeting} 👋")
 
-    Use this platform to explore scholarship opportunities and get resources specific to SCU students.
+    # Introductory Text
+    st.markdown("""
+    **Discover scholarships tailored for Santa Clara University students.**  
+    Use this platform to explore funding opportunities, get personalized recommendations, and plan for upcoming deadlines.
     """)
+
+    # Quick Links Section
+    st.markdown("### 🔗 Quick Links")
+    st.markdown("""
+    - [SCU Financial Aid Office](https://www.scu.edu/financial-aid/)
+    - [Scholarship Application Tips](https://www.scholarships.com/resources/tips-for-applying/)
+    - [SCU Career Center](https://www.scu.edu/careercenter/)
+    """)
+
+    # Scholarship Tips Section
+    st.markdown("### 💡 Scholarship Tips")
+    st.markdown("""
+    - **Start Early**: Begin your search and application process well in advance of deadlines.
+    - **Tailor Your Applications**: Customize essays and responses to match each scholarship's requirements.
+    - **Leverage SCU Resources**: Reach out to the financial aid office or academic advisors for guidance.
+    """)
+
+    # Upcoming Deadlines
+    st.markdown("### 📅 Upcoming Deadlines")
+    st.markdown("""
+    - **SCU Merit Scholarship**: December 15, 2024  
+    - **Diversity in Tech Award**: December 20, 2024  
+    - **Graduate Assistantship Grant**: January 10, 2025  
+    """)
+
+    # FAQs Section
+    st.markdown("### ❓ FAQs")
+    st.markdown("""
+    - **Who can apply for scholarships?**  
+      Most scholarships are available to SCU students who meet specific criteria, such as academic performance or financial need.
+    - **Do I need to file FAFSA?**  
+      Filing FAFSA is required for need-based scholarships and federal aid.
+    - **Where can I get help with my application?**  
+      Visit the [SCU Financial Aid Office](https://www.scu.edu/financial-aid/) or contact your academic advisor.
+    """)
+
     st.balloons()
 
 # Scholarship Finder Page
