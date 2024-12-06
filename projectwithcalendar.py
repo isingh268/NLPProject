@@ -9,7 +9,7 @@ Original file is located at
 
 # -*- coding: utf-8 -*-
 """SCU Scholarship Finder"""
-pip install streamlit_calendar
+
 import streamlit as st
 import pandas as pd
 from datetime import datetime
