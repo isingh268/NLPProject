@@ -14,7 +14,7 @@ from langchain.schema import HumanMessage
 # Initialize Ollama Chat with Llama 3.2
 def get_llama_response(prompt):
     try:
-        llm = ChatOllama(model="llama3.2")
+        llm = ChatOllama(model="llama3.2", base_url="http://localhost:11434")
         response = llm.invoke([HumanMessage(content=prompt)])
         return response.content
     except Exception as e:
