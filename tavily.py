@@ -8,33 +8,23 @@ Original file is located at
 """
 
 import streamlit as st
-from tavily import TavilyClient
+from langchain_ollama import ChatOllama
+from langchain.schema import HumanMessage
 
-# Setup Tavily API key
-TAVILY_API_KEY = "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"  # Replace with your Tavily API key
-
-# Initialize Tavily Client
-tavily_client = TavilyClient(api_key=TAVILY_API_KEY)
-
-# Function to query Tavily for scholarships
-def fetch_scholarships_from_tavily(student_profile):
+# Initialize Ollama Chat with Llama 3.2
+def get_llama_response(prompt):
     try:
-        query = (
-            f"Find scholarships available for students attending Santa Clara University, "
-            f"who are {student_profile['school_year']}s, studying {student_profile['major']} with a GPA of {student_profile['gpa']}. "
-            f"Consider financial need: {student_profile['financial_need']} and interests in {', '.join(student_profile['causes'])}. "
-            f"Focus on scholarships targeting {student_profile['ethnicity']} and residents of {student_profile['residence_state']}."
-        )
-        results = tavily_client.search(query=query, search_depth="advanced")["results"]
-        return results
+        llm = ChatOllama(model="llama3.2")
+        response = llm.invoke([HumanMessage(content=prompt)])
+        return response.content
     except Exception as e:
-        return f"Error fetching scholarships: {str(e)}"
+        return f"Error generating response: {str(e)}"
 
 # Streamlit App
 def main():
-    st.title("🎓 SCU Scholarship Finder")
+    st.title("🎓 Scholarship Advisor with Llama 3.2")
     st.markdown("""
-    Welcome to the SCU Scholarship Finder! This tool helps students attending Santa Clara University discover scholarships tailored to their profile and preferences.
+    Use Llama 3.2 to fetch scholarship recommendations and provide guidance based on student profiles.
     """)
 
     # Student Profile Input
@@ -54,27 +44,27 @@ def main():
         ["Community Service", "Sustainability", "Social Justice", "Diversity", "STEM", "Arts"]
     )
 
-    # Fetch and Display Scholarships
-    if st.button("Find Scholarships"):
-        student_profile = {
-            "name": name,
-            "gpa": gpa,
-            "major": major,
-            "school_year": school_year,
-            "financial_need": financial_need,
-            "ethnicity": ethnicity,
-            "residence_state": residence_state,
-            "causes": causes
-        }
+    # Generate Recommendations
+    if st.button("Get Recommendations"):
+        # Create Prompt for Llama
+        prompt = (
+            f"Student Profile:\n"
+            f"Name: {name}\n"
+            f"GPA: {gpa}\n"
+            f"Major: {major}\n"
+            f"School Year: {school_year}\n"
+            f"Financial Need: {financial_need}\n"
+            f"Ethnicity: {ethnicity}\n"
+            f"Residence State: {residence_state}\n"
+            f"Causes: {', '.join(causes)}\n\n"
+            f"Generate scholarship recommendations and next steps for this student."
+        )
 
-        with st.spinner("Fetching scholarships from Tavily..."):
-            scholarships = fetch_scholarships_from_tavily(student_profile)
+        with st.spinner("Fetching recommendations..."):
+            response = get_llama_response(prompt)
 
-        if isinstance(scholarships, str) and scholarships.startswith("Error"):
-            st.error(scholarships)
-        else:
-            st.success("Here are the scholarships fetched from Tavily:")
-            st.write(scholarships)
+        st.success("Here are your scholarship recommendations:")
+        st.write(response)
 
 if __name__ == "__main__":
     main()
