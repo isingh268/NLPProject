@@ -9,7 +9,7 @@ Original file is located at
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer 
 import gc
 
 # Configure the page
@@ -54,70 +54,47 @@ df["Date Due"] = pd.to_datetime(df["Date Due"])
 # Load Transformers Pipelines
 @st.cache_resource
 def load_transformers():
-    """Load smaller and optimized models."""
     text_generator = pipeline("text-generation", model="EleutherAI/gpt-neo-1.3B")
     summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-    return text_generator, summarizer
+    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B")
+    return text_generator, summarizer, tokenizer
 
-text_generator, summarizer = load_transformers()
+text_generator, summarizer, tokenizer = load_transformers()
 
-# Sidebar Navigation
-st.sidebar.title("📚 Navigation")
-nav_option = st.sidebar.radio("Go to:", ["🏠 Home", "🎓 Find Scholarships", "📅 Calendar View", "ℹ️ About"])
+# Scholarship Finder Function
+def generate_scholarship_recommendations(prompt, max_length=250):
+    # Tokenize and Check Length
+    tokens = tokenizer(prompt, return_tensors="pt", truncation=True)
+    input_length = len(tokens["input_ids"][0])
+    max_possible_output = 2048 - input_length  # Adjust for GPT-Neo's max sequence length
 
-# Home Page
-if nav_option == "🏠 Home":
-    st.title("🎓 Welcome to the Scholarship Finder!")
-    st.markdown("""
-    **Discover tailored scholarships and grants with ease.**  
-    Plan your applications and explore opportunities designed for you.
-    """)
+    # Adjust max_length if necessary
+    adjusted_max_length = min(max_length, max_possible_output)
+    if adjusted_max_length <= 0:
+        return "Error: Input prompt is too long. Please shorten your input."
 
-# Scholarship Finder Page
-elif nav_option == "🎓 Find Scholarships":
-    st.header("🎓 Find Scholarships")
-    st.subheader("📚 Student Profile")
-    name = st.text_input("Full Name")
-    gpa = st.slider("GPA", 0.0, 4.0, 3.0, step=0.1)
-    major = st.selectbox("Academic Major", ["Computer Science", "Engineering", "Business", "Psychology", "Biology", "Other"])
-    school_year = st.selectbox("School Year", ["Freshman", "Sophomore", "Junior", "Senior", "Graduate Student"])
-    financial_need = st.selectbox("Financial Need?", ["Yes", "No"])
-    residence_state = st.text_input("State of Residence (e.g., California)")
-    causes = st.multiselect("Causes or Interests", ["Sustainability", "Community Service", "Diversity", "STEM", "Arts"])
+    # Generate Recommendations
+    response = text_generator(prompt, max_length=adjusted_max_length, num_return_sequences=1)
+    return response[0]["generated_text"]
 
-    if st.button("🔍 Find Scholarships"):
-        # Generate Student Profile Context
-        student_profile = f"""
-        Student Profile:
-        - Name: {name}
-        - GPA: {gpa}
-        - Major: {major}
-        - School Year: {school_year}
-        - Financial Need: {financial_need}
-        - Residence State: {residence_state}
-        - Causes: {', '.join(causes)}
-        """
-        scholarship_context = "\n".join(
-            f"{row['Scholarship Name']}:\n{row['Summary']} (Due: {row['Date Due'].strftime('%Y-%m-%d')})"
-            for _, row in df.iterrows()
-        )
+# Streamlit App Integration
+if st.button("🔍 Find Scholarships"):
+    prompt = f"""
+    Student Profile:
+    - Name: {name}
+    - GPA: {gpa}
+    - Major: {major}
+    - School Year: {school_year}
+    - Financial Need: {financial_need}
+    - Residence State: {residence_state}
+    - Causes: {', '.join(causes)}
 
-        # Generate Recommendations
-        prompt = (
-            f"Based on the following student profile and available scholarships, "
-            f"recommend scholarships that fit the student's needs. Include reasons for fit, application steps, and next actions.\n\n"
-            f"{student_profile}\n\nAvailable Scholarships:\n{scholarship_context}"
-        )
-
-        with st.spinner("Generating recommendations..."):
-            response = text_generator(prompt, max_length=250, num_return_sequences=1)
-        
-        # Clear memory after processing
-        del prompt
-        gc.collect()
-
-        st.success("Here are your scholarship recommendations:")
-        st.write(response[0]["generated_text"])
+    Based on the above, recommend scholarships that fit the student's profile and explain why each is a good fit. Provide next steps and application guidance.
+    """
+    with st.spinner("Generating recommendations..."):
+        recommendations = generate_scholarship_recommendations(prompt)
+    st.success("Here are your scholarship recommendations:")
+    st.write(recommendations)
 
 # Calendar View Page
 elif nav_option == "📅 Calendar View":
